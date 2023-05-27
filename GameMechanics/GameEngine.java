@@ -4,15 +4,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 import GameObjects.Rectangle;
+import Utils.Constants;
 
 public class GameEngine implements Runnable{
     private static final int TILE_SIZE = 48;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
-    private static final int LEFT_ARROW = 37;
-    private static final int UP_ARROW = 38;
-    private static final int RIGHT_ARROW = 39;
-    private static final int DOWN_ARROW = 40;
     JFrame frame;
     GamePanel gamePanel;
     Thread gameThread;
@@ -72,16 +69,16 @@ public class GameEngine implements Runnable{
 
     public void update() {
         //testing
-        if (gamePanel.getKeyStatus(LEFT_ARROW)) {
+        if (gamePanel.getKeyStatus(Constants.LEFT_ARROW)) {
             System.out.println("Left Arrow Pressed!");
         }
-        if (gamePanel.getKeyStatus(RIGHT_ARROW)) {
+        if (gamePanel.getKeyStatus(Constants.RIGHT_ARROW)) {
             System.out.println("Right Arrow Pressed!");
         }
-        if (gamePanel.getKeyStatus(DOWN_ARROW)) {
+        if (gamePanel.getKeyStatus(Constants.DOWN_ARROW)) {
             System.out.println("Down Arrow Pressed!");
         }
-        if (gamePanel.getKeyStatus(UP_ARROW)) {
+        if (gamePanel.getKeyStatus(Constants.UP_ARROW)) {
             System.out.println("Up Arrow Pressed!");
         }
 
