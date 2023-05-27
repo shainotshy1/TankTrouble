@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
-    KeyHandler keyHandler;
-    List<GameObject> gameObjects;
+    private KeyHandler keyHandler;
+    private List<GameObject> gameObjects;
     public GamePanel(int w, int h, Color bg) {
         setPreferredSize(new Dimension(w, h));
         setBackground(bg);
@@ -27,6 +27,10 @@ public class GamePanel extends JPanel {
 
     public void removeGameObject(GameObject gameObject) {
         gameObjects.remove(gameObject);
+    }
+
+    public void clearAllGameObjects() {
+        gameObjects.clear();
     }
 
     public boolean getKeyStatus(int code) {
