@@ -3,7 +3,6 @@ package GameMechanics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
-import GameObjects.Rectangle;
 import Utils.Constants;
 
 public class GameEngine implements Runnable{
@@ -13,6 +12,7 @@ public class GameEngine implements Runnable{
     JFrame frame;
     GamePanel gamePanel;
     Thread gameThread;
+    World world;
     int rows;
     int cols;
     int topLeftX;
@@ -27,21 +27,22 @@ public class GameEngine implements Runnable{
     }
 
     public void generateWorld(double aspectRatio) {
+        int wallWidth = 10;
+        int w = WINDOW_WIDTH - wallWidth * 2;
+        int h = WINDOW_HEIGHT - wallWidth * 2;
         if (aspectRatio > 1) {
-            cols = (WINDOW_WIDTH + TILE_SIZE - 1) / TILE_SIZE;
+            cols = w / TILE_SIZE;
             rows = (int)Math.ceil(cols / aspectRatio);
-            topLeftX = 0;
-            topLeftY = (WINDOW_HEIGHT - rows * TILE_SIZE) / 2;
+            topLeftX = (w % TILE_SIZE) / 2;
+            topLeftY = (h - rows * TILE_SIZE) / 2;
         } else {
-            rows = (WINDOW_HEIGHT + TILE_SIZE - 1) / TILE_SIZE;
+            rows = h / TILE_SIZE;
             cols = (int)Math.ceil(rows * aspectRatio);
-            topLeftY = 0;
-            topLeftX = (WINDOW_WIDTH - cols * TILE_SIZE) / 2;
+            topLeftY = (h % TILE_SIZE) / 2;
+            topLeftX = (w - cols * TILE_SIZE) / 2;
         }
-
-        //Demonstration of how to use the game panel
-        Rectangle rectangle = new Rectangle(topLeftX, topLeftY, cols * TILE_SIZE, rows * TILE_SIZE, Color.WHITE);
-        gamePanel.addGameObject(rectangle);
+        world = new World(gamePanel, topLeftX + wallWidth, topLeftY + wallWidth, rows, cols, TILE_SIZE, wallWidth);
+        gamePanel.addGameObject(world);
     }
 
     private void setupFrame(JPanel panel) {
@@ -81,6 +82,5 @@ public class GameEngine implements Runnable{
         if (gamePanel.getKeyStatus(Constants.UP_ARROW)) {
             System.out.println("Up Arrow Pressed!");
         }
-
     }
 }
