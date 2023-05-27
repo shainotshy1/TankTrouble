@@ -3,7 +3,6 @@ package GameMechanics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
-import Utils.Constants;
 
 public class GameEngine implements Runnable{
     private static final int TILE_SIZE = 48;
@@ -22,14 +21,14 @@ public class GameEngine implements Runnable{
         gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
         setupFrame(gamePanel);
 
-        double test_aspect_ratio = 3;
-        generateWorld(test_aspect_ratio);
+        double test_aspect_ratio = 2.5;
+        int wallWidth = 5;
+        generateWorld(test_aspect_ratio, wallWidth);
     }
 
-    public void generateWorld(double aspectRatio) {
-        int wallWidth = 10;
-        int w = WINDOW_WIDTH - wallWidth * 2;
-        int h = WINDOW_HEIGHT - wallWidth * 2;
+    public void generateWorld(double aspectRatio, int wallWidth) {
+        int w = WINDOW_WIDTH;
+        int h = WINDOW_HEIGHT;
         if (aspectRatio > 1) {
             cols = w / TILE_SIZE;
             rows = (int)Math.ceil(cols / aspectRatio);
@@ -41,7 +40,7 @@ public class GameEngine implements Runnable{
             topLeftY = (h % TILE_SIZE) / 2;
             topLeftX = (w - cols * TILE_SIZE) / 2;
         }
-        world = new World(gamePanel, topLeftX + wallWidth, topLeftY + wallWidth, rows, cols, TILE_SIZE, wallWidth);
+        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth);
         gamePanel.addGameObject(world);
     }
 
@@ -69,18 +68,6 @@ public class GameEngine implements Runnable{
     }
 
     public void update() {
-        //testing
-        if (gamePanel.getKeyStatus(Constants.LEFT_ARROW)) {
-            System.out.println("Left Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.RIGHT_ARROW)) {
-            System.out.println("Right Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.DOWN_ARROW)) {
-            System.out.println("Down Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.UP_ARROW)) {
-            System.out.println("Up Arrow Pressed!");
-        }
+
     }
 }

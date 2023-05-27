@@ -8,7 +8,28 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class World implements GameObject {
-    List<Wall> walls;
+    private class GridBlock implements GameObject {
+        public boolean bottom = true;
+        public boolean right = true;
+        private Wall bottomWall;
+        private Wall rightWall;
+        public GridBlock(double x, double y, double wallWidth, double tileSize, Color color) {
+            bottomWall = new Wall(x, y + tileSize - wallWidth, tileSize, wallWidth, color);
+            rightWall = new Wall(x + tileSize - wallWidth, y, wallWidth, tileSize, color);
+        }
+
+        @Override
+        public void display(Graphics2D g2) {
+            if (bottom) {
+                bottomWall.display(g2);
+            }
+            if (right) {
+                rightWall.display(g2);
+            }
+        }
+    }
+    List<GridBlock> blocks;
+    List<Wall> borders;
     GamePanel gamePanel;
     int x;
     int y;
@@ -28,40 +49,50 @@ public class World implements GameObject {
         this.wallWidth = wallWidth;
         worldWidth = cols * tileSize;
         worldHeight = rows * tileSize;
-        walls = new ArrayList<>();
+        blocks = new ArrayList<>();
+        borders = new ArrayList<>();
         generateMap();
     }
 
-    private void generateBorders(Color color, double size) {
-        Wall wall1 = new Wall(x - size, y - size, worldWidth + 2 * size, size, color); //top
-        Wall wall2 = new Wall(x - size, y + worldHeight, worldWidth + 2 * size, size, color); //bottom
-        Wall wall3 = new Wall(x - size, y - size, size, worldHeight + 2 * size, color); //left
-        Wall wall4 = new Wall(x + worldWidth, y - size, size, worldHeight + 2 * size, color); //right
-        walls.add(wall1);
-        walls.add(wall2);
-        walls.add(wall3);
-        walls.add(wall4);
+    private void generateBorders(Color color) {
+        double shift = wallWidth / 2;
+        double x_c = x - shift;
+        double y_c = y - shift;
+        Wall wall1 = new Wall(x_c, y_c, worldWidth + shift * 2, wallWidth, color); //top
+        Wall wall2 = new Wall(x_c, y_c + worldHeight, worldWidth + shift, wallWidth, color); //bottom
+        Wall wall3 = new Wall(x_c, y_c, wallWidth, worldHeight + shift * 2, color); //left
+        Wall wall4 = new Wall(x_c + worldWidth, y_c, wallWidth, worldHeight, color); //right
+        borders.add(wall1);
+        borders.add(wall2);
+        borders.add(wall3);
+        borders.add(wall4);
     }
 
-    private void generateObstacles(Color color, double size) {
-        for (int j = 1; j < rows; j++) {
-            for (int i = 0; i < cols; i+=2) {
-                Wall wall = new Wall(x + (j % 2 + i) * tileSize, y + j * tileSize, tileSize, size, color);
-                walls.add(wall);
+    private void generateObstacles(Color color) {
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                double xPos = x + i * tileSize + wallWidth / 2;
+                double yPos = y + j * tileSize + wallWidth / 2;
+                GridBlock block = new GridBlock(xPos, yPos, wallWidth, tileSize, color);
+                blocks.add(block);
             }
         }
     }
 
     private void generateMap() {
-        walls.clear();
+        borders.clear();
+        blocks.clear();
         Color color = Color.WHITE;
-        generateBorders(color, wallWidth);
-        generateObstacles(color, wallWidth);
+        generateBorders(color);
+        generateObstacles(color);
     }
 
     @Override
     public void display(Graphics2D g2) {
-        for (Wall wall : walls) {
+        for (GridBlock block : blocks) {
+            block.display(g2);
+        }
+        for (Wall wall : borders) {
             wall.display(g2);
         }
     }
