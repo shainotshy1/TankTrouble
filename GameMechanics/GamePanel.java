@@ -1,3 +1,5 @@
+package GameMechanics;
+
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -5,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.util.List;
 import java.util.ArrayList;
+import GameObjects.GameObject;
 
 public class GamePanel extends JPanel {
     private KeyHandler keyHandler;

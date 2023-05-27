@@ -1,3 +1,5 @@
+package GameObjects;
+
 import java.awt.Graphics2D;
 
 public interface GameObject {

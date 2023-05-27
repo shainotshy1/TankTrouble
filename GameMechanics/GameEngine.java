@@ -1,7 +1,9 @@
+package GameMechanics;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.*;
-import java.util.List;
+import java.awt.Color;
+import GameObjects.Rectangle;
 
 public class GameEngine implements Runnable{
     private static final int TILE_SIZE = 48;
