@@ -8,12 +8,13 @@ import java.util.*;
 import java.util.List;
 
 public class World implements GameObject {
+    private static final double SPARSITY = 0.55;
     private class GridBlock implements GameObject {
-        int row;
-        int col;
+        public int row, col;
         public boolean bottom = true;
         public boolean right = true;
         public boolean marked = false;
+        public GridBlock prev;
         private Wall bottomWall;
         private Wall rightWall;
         public GridBlock(int row, int col, double x, double y, double wallWidth, double tileSize, Color color) {
@@ -36,13 +37,7 @@ public class World implements GameObject {
     GridBlock[][] blocks;
     List<Wall> borders;
     GamePanel gamePanel;
-    int x;
-    int y;
-    int rows;
-    int cols;
-    int tileSize;
-    int worldWidth;
-    int worldHeight;
+    int x, y, rows, cols, tileSize, worldWidth, worldHeight;
     double wallWidth;
     int seed;
     Random random;
@@ -89,8 +84,9 @@ public class World implements GameObject {
                 blocks[i][j] = block;
             }
         }
+
+        //DFS maze generation
         GridBlock block = blocks[0][0];
-        GridBlock prev = null;
         Stack<GridBlock> fringe = new Stack<>();
         List<GridBlock> spread = new ArrayList<>();
         fringe.add(block);
@@ -98,16 +94,14 @@ public class World implements GameObject {
             block = fringe.pop();
             block.marked = true;
 
-            if (prev != null) {
-                if (prev.row < block.row) { //top
-                    prev.bottom = false;
-
-                } else if (prev.row > block.row) { //bottom
+            if (block.prev != null) {
+                if (block.prev.row < block.row) { //top
+                    block.prev.bottom = false;
+                } else if (block.prev.row > block.row) { //bottom
                     block.bottom = false;
-
-                } else if (prev.col < block.col) { //left
-                    prev.right = false;
-                } else if (prev.col > block.col) { //right
+                } else if (block.prev.col < block.col) { //left
+                    block.prev.right = false;
+                } else if (block.prev.col > block.col) { //right
                     block.right = false;
                 }
             }
@@ -121,6 +115,7 @@ public class World implements GameObject {
             int top_col = block.col;
             int bot_row = block.row + 1;
             int bot_col = block.col;
+            //prev incorrect
             if (inBounds(left_row, left_col) && !blocks[left_row][left_col].marked) {
                 spread.add(blocks[left_row][left_col]);
             }
@@ -135,9 +130,19 @@ public class World implements GameObject {
             }
             Collections.shuffle(spread, random);
             for (GridBlock neighbor : spread) {
+                neighbor.prev = block;
                 fringe.add(neighbor);
             }
-            prev = block;
+        }
+
+        //reduce number of obstacle walls
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (random.nextDouble() < SPARSITY) {
+                    blocks[i][j].bottom = false;
+                    blocks[i][j].right = false;
+                }
+            }
         }
     }
 

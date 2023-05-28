@@ -40,7 +40,7 @@ public class GameEngine implements Runnable{
             topLeftY = (h % TILE_SIZE) / 2;
             topLeftX = (w - cols * TILE_SIZE) / 2;
         }
-        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 123);
+        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 123456);
         gamePanel.addGameObject(world);
     }
 
