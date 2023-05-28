@@ -20,6 +20,10 @@ public class Vector2d {
         return dot(this);
     }
 
+    public double cross(Vector2d other) {
+        return x * other.y - y * other.x;
+    }
+
     public void add(Vector2d other) {
         x += other.x;
         y += other.y;
