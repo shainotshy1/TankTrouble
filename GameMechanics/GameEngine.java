@@ -13,10 +13,7 @@ public class GameEngine implements Runnable{
     GamePanel gamePanel;
     Thread gameThread;
     World world;
-    int rows;
-    int cols;
-    int topLeftX;
-    int topLeftY;
+    int rows, cols, topLeftX, topLeftY;
     public GameEngine() {
         frame = new JFrame();
         gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
