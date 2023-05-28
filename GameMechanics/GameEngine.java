@@ -44,8 +44,6 @@ public class GameEngine implements Runnable{
         //Demonstration of how to use the game panel
         Rectangle rectangle = new Rectangle(topLeftX, topLeftY, cols * TILE_SIZE, rows * TILE_SIZE, Color.WHITE);
         gamePanel.addGameObject(rectangle);
-        Tank tank = new Tank(new Tuple<>(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0), Color.RED, Color.GREEN);
-        gamePanel.addGameObject(tank);
     }
 
     private void setupFrame(JPanel panel) {
