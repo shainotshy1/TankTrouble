@@ -1,6 +1,7 @@
 package GameObjects;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 
 import GameMechanics.GamePanel;
@@ -20,16 +21,14 @@ public class Tank implements GameObject{
     private Double direction; // angle in radians
     private Color bodyColor;
     private Color turretColor;
-    private KeyHandler keyHandler;
     public Tank(Tuple<Double, Double> centerPos, Color bodyColor, Color turretColor){
-        this.keyHandler = new KeyHandler();
         this.direction = 0.0;
         this.accel = new Tuple<>(0.0, 0.0);
         this.vel = new Tuple<>(0.0, 0.0);
         this.centerPos = centerPos;
         this.bodyColor = bodyColor;
         this.turretColor = turretColor;
-        this.bodyDim = new Tuple<>(50, 50);
+        this.bodyDim = new Tuple<>(30, 30);
         this.turretDim = new Tuple<>(this.bodyDim.first/5, this.bodyDim.first*4/5);
 
         this.bodyPos = new Tuple<>(this.centerPos.first - this.bodyDim.first/2,
@@ -43,27 +42,46 @@ public class Tank implements GameObject{
 
     }
 
-    private void updateMotion() {
-        this.updatePosition(this.vel);
+    private void updateMotion(Graphics2D g2) {
         this.updateVelocity(this.accel);
+        this.updatePosition(g2, this.vel);
     }
-
+//
     public void updateVelocity(Tuple<Double, Double> accel) {
         this.body.updateVelocity(accel);
         this.turret.updateVelocity(accel);
     }
 
-    public void updatePosition(Tuple<Double, Double> vel) {
+    public void updatePosition(Graphics2D g2, Tuple<Double, Double> vel) {
         this.body.updatePosition(vel);
         this.turret.updatePosition(vel);
+        g2.translate(vel.first, vel.second);
+    }
+
+
+    public void update(Graphics2D g2, GamePanel gamePanel, HashMap<String, Integer> keyCodes) {
+        this.updateMotion(g2);
+        if (gamePanel.getKeyStatus(keyCodes.get("UP"))) {
+            this.updateVelocity(new Tuple<>(Math.cos(this.direction), Math.sin(this.direction)));
+        }
+        if (gamePanel.getKeyStatus(keyCodes.get("DOWN"))) {
+            this.updateVelocity(new Tuple<>(-Math.cos(this.direction), -Math.sin(this.direction)));
+        }
+        if (gamePanel.getKeyStatus(keyCodes.get("LEFT"))) {
+            this.direction -= Math.PI/200;
+        }
+        if (gamePanel.getKeyStatus(keyCodes.get("RIGHT"))) {
+            this.direction += Math.PI/200;
+        }
     }
 
     @Override
     public void display(Graphics2D g2) {
-        this.updateMotion();
-
+        AffineTransform old = g2.getTransform();
+        g2.translate(this.centerPos.first, this.centerPos.second);
+        g2.rotate(this.direction);
         this.body.display(g2);
         this.turret.display(g2);
-//        g2.rotate(-this.direction, this.centerPos.first, this.centerPos.second);
+        g2.setTransform(old);
     }
 }

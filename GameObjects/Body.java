@@ -19,7 +19,8 @@ public class Body extends Mover implements GameObject {
     @Override
     public void display(Graphics2D g2) {
         g2.setColor(this.color);
-        g2.fillRect((int) Math.round(this.pos.first), (int) Math.round(this.pos.second), this.width, this.height);
+//        g2.fillRect((int) Math.round(this.pos.first), (int) Math.round(this.pos.second), this.width, this.height);
+        g2.fillRect(-this.width/2,-this.height/2, this.width, this.height);
         this.updateVelocity(this.accel);
         this.updatePosition(this.vel);
     }

@@ -2,11 +2,12 @@ package GameMechanics;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Color;
+import java.awt.*;
 import java.util.HashMap;
 
 
 import GameObjects.*;
+import GameObjects.Rectangle;
 import Utils.Constants;
 import Utils.Tuple;
 
@@ -46,14 +47,23 @@ public class GameEngine implements Runnable{
         //Demonstration of how to use the game panel
         Rectangle rectangle = new Rectangle(topLeftX, topLeftY, cols * TILE_SIZE, rows * TILE_SIZE, Color.WHITE);
         gamePanel.addGameObject(rectangle);
-        HashMap<String, Integer> keyCodes = new HashMap<>();
-        keyCodes.put("UP", Constants.UP_ARROW);
-        keyCodes.put("DOWN", Constants.DOWN_ARROW);
-        keyCodes.put("LEFT", Constants.LEFT_ARROW);
-        keyCodes.put("RIGHT", Constants.RIGHT_ARROW);
-        Player player1 = new Player(new Tuple<>(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0), "Bob",
-                                    Color.BLUE, Color.RED, gamePanel, keyCodes);
+        HashMap<String, Integer> keyCodes1 = new HashMap<>();
+        keyCodes1.put("UP", Constants.UP_ARROW);
+        keyCodes1.put("DOWN", Constants.DOWN_ARROW);
+        keyCodes1.put("LEFT", Constants.LEFT_ARROW);
+        keyCodes1.put("RIGHT", Constants.RIGHT_ARROW);
+        Player player1 = new Player(new Tuple<>(WINDOW_WIDTH*2.0/3.0, WINDOW_HEIGHT/2.0), "Bob",
+                                    Color.BLUE, Color.RED, gamePanel, keyCodes1);
         gamePanel.addGameObject(player1);
+
+        HashMap<String, Integer> keyCodes2 = new HashMap<>();
+        keyCodes2.put("UP", Constants.W);
+        keyCodes2.put("DOWN", Constants.A);
+        keyCodes2.put("LEFT", Constants.S);
+        keyCodes2.put("RIGHT", Constants.D);
+        Player player2 = new Player(new Tuple<>(WINDOW_WIDTH/3.0, WINDOW_HEIGHT/2.0), "Joe",
+                Color.MAGENTA, Color.GREEN, gamePanel, keyCodes2);
+        gamePanel.addGameObject(player2);
     }
 
     private void setupFrame(JPanel panel) {
@@ -80,19 +90,6 @@ public class GameEngine implements Runnable{
     }
 
     public void update() {
-        //testing
-        if (gamePanel.getKeyStatus(Constants.LEFT_ARROW)) {
-            System.out.println("Left Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.RIGHT_ARROW)) {
-            System.out.println("Right Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.DOWN_ARROW)) {
-            System.out.println("Down Arrow Pressed!");
-        }
-        if (gamePanel.getKeyStatus(Constants.UP_ARROW)) {
-            System.out.println("Up Arrow Pressed!");
-        }
 
     }
 }
