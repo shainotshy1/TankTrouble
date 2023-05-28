@@ -1,9 +1,14 @@
 package GameObjects;
 
+import java.awt.*;
+
 public abstract class Mover {
     public Tuple<Double, Double> pos;
     public Tuple<Double, Double> vel;
     public Tuple<Double, Double> accel;
+    public int width;
+    public int height;
+    public Color color;
 
     public void updatePosition(Tuple<Double, Double> vel) {
         this.pos.first += vel.first;

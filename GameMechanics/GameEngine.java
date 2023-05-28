@@ -4,10 +4,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
 
-import GameObjects.Body;
-import GameObjects.Rectangle;
-import GameObjects.Tuple;
-import GameObjects.Turret;
+
+import GameObjects.*;
 import Utils.Constants;
 
 public class GameEngine implements Runnable{
@@ -46,10 +44,8 @@ public class GameEngine implements Runnable{
         //Demonstration of how to use the game panel
         Rectangle rectangle = new Rectangle(topLeftX, topLeftY, cols * TILE_SIZE, rows * TILE_SIZE, Color.WHITE);
         gamePanel.addGameObject(rectangle);
-        Body body = new Body(50, 50);
-        gamePanel.addGameObject(body);
-        Turret turret = new Turret(10, 50);
-        gamePanel.addGameObject(turret);
+        Tank tank = new Tank(new Tuple<>(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0), Color.RED, Color.GREEN);
+        gamePanel.addGameObject(tank);
     }
 
     private void setupFrame(JPanel panel) {
