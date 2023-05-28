@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 
 public class GameEngine implements Runnable{
+    private static final int WALL_WIDTH = 5;
     private static final int TILE_SIZE = 48;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
@@ -22,8 +23,7 @@ public class GameEngine implements Runnable{
         setupFrame(gamePanel);
 
         double test_aspect_ratio = 2;
-        int wallWidth = 5;
-        generateWorld(test_aspect_ratio, wallWidth);
+        generateWorld(test_aspect_ratio, WALL_WIDTH);
     }
 
     public void generateWorld(double aspectRatio, int wallWidth) {
@@ -40,7 +40,7 @@ public class GameEngine implements Runnable{
             topLeftY = (h % TILE_SIZE) / 2;
             topLeftX = (w - cols * TILE_SIZE) / 2;
         }
-        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 123456);
+        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 1);
         gamePanel.addGameObject(world);
     }
 
