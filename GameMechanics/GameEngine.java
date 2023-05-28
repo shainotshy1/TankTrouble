@@ -3,10 +3,12 @@ package GameMechanics;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.util.HashMap;
 
 
 import GameObjects.*;
 import Utils.Constants;
+import Utils.Tuple;
 
 public class GameEngine implements Runnable{
     private static final int TILE_SIZE = 48;
@@ -44,6 +46,14 @@ public class GameEngine implements Runnable{
         //Demonstration of how to use the game panel
         Rectangle rectangle = new Rectangle(topLeftX, topLeftY, cols * TILE_SIZE, rows * TILE_SIZE, Color.WHITE);
         gamePanel.addGameObject(rectangle);
+        HashMap<String, Integer> keyCodes = new HashMap<>();
+        keyCodes.put("UP", Constants.UP_ARROW);
+        keyCodes.put("DOWN", Constants.DOWN_ARROW);
+        keyCodes.put("LEFT", Constants.LEFT_ARROW);
+        keyCodes.put("RIGHT", Constants.RIGHT_ARROW);
+        Player player1 = new Player(new Tuple<>(WINDOW_WIDTH/2.0, WINDOW_HEIGHT/2.0), "Bob",
+                                    Color.BLUE, Color.RED, gamePanel, keyCodes);
+        gamePanel.addGameObject(player1);
     }
 
     private void setupFrame(JPanel panel) {

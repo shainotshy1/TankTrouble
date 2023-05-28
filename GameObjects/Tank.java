@@ -3,6 +3,7 @@ package GameObjects;
 import java.awt.*;
 import java.util.HashMap;
 
+import GameMechanics.GamePanel;
 import GameMechanics.KeyHandler;
 import Utils.Tuple;
 
@@ -20,11 +21,8 @@ public class Tank implements GameObject{
     private Color bodyColor;
     private Color turretColor;
     private KeyHandler keyHandler;
-    private HashMap<Integer, Double> codeToDirection; // maps keycode to direction
-    public Tank(Tuple<Double, Double> centerPos, Color bodyColor, Color turretColor,
-                HashMap<Integer, Double> codeToDirection){
+    public Tank(Tuple<Double, Double> centerPos, Color bodyColor, Color turretColor){
         this.keyHandler = new KeyHandler();
-        this.codeToDirection = codeToDirection;
         this.direction = 0.0;
         this.accel = new Tuple<>(0.0, 0.0);
         this.vel = new Tuple<>(0.0, 0.0);
@@ -46,24 +44,26 @@ public class Tank implements GameObject{
     }
 
     private void updateMotion() {
-        this.body.updateVelocity(this.accel);
-        this.body.updatePosition(this.vel);
-        this.turret.updateVelocity(this.accel);
-        this.turret.updatePosition(this.vel);
+        this.updatePosition(this.vel);
+        this.updateVelocity(this.accel);
     }
 
-    private void rotateMover(Mover mover, Double angle) {
-        Double dx = mover.pos.first*(1-Math.cos(angle)) + mover.pos.second*Math.sin(angle);
-        Double dy = mover.pos.second*(1-Math.cos(angle)) - mover.pos.first*Math.sin(angle);
-        mover.updatePosition(new Tuple<>(dx, dy));
+    public void updateVelocity(Tuple<Double, Double> accel) {
+        this.body.updateVelocity(accel);
+        this.turret.updateVelocity(accel);
+    }
+
+    public void updatePosition(Tuple<Double, Double> vel) {
+        this.body.updatePosition(vel);
+        this.turret.updatePosition(vel);
     }
 
     @Override
     public void display(Graphics2D g2) {
         this.updateMotion();
+
         this.body.display(g2);
         this.turret.display(g2);
+//        g2.rotate(-this.direction, this.centerPos.first, this.centerPos.second);
     }
 }
-
-// keycodes: https://stackoverflow.com/questions/15313469/java-keyboard-keycodes-list
