@@ -22,7 +22,7 @@ public class GameEngine implements Runnable{
         gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
         setupFrame(gamePanel);
 
-        double test_aspect_ratio = 2;
+        double test_aspect_ratio = 2.5;
         generateWorld(test_aspect_ratio, WALL_WIDTH);
     }
 
