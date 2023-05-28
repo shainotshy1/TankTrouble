@@ -1,5 +1,7 @@
 package GameObjects;
 
+import Utils.Tuple;
+
 import java.awt.*;
 
 public class Body extends Mover implements GameObject {

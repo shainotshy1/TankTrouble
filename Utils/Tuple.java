@@ -1,4 +1,4 @@
-package GameObjects;
+package Utils;
 
 public class Tuple<V1, V2> {
     public V1 first;

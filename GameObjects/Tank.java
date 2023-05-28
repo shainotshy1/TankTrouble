@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.HashMap;
 
 import GameMechanics.KeyHandler;
+import Utils.Tuple;
 
 public class Tank implements GameObject{
     private Body body;
@@ -15,14 +16,16 @@ public class Tank implements GameObject{
     private Tuple<Double, Double> turretPos; // (x, y)
     private Tuple<Double, Double> vel; // (vx, vy)
     private Tuple<Double, Double> accel; // (ax, ay)
+    private Double direction; // angle in radians
     private Color bodyColor;
     private Color turretColor;
     private KeyHandler keyHandler;
-    private HashMap<Integer, Tuple<Double, Double>> keyMap; // maps keycode to direction
+    private HashMap<Integer, Double> codeToDirection; // maps keycode to direction
     public Tank(Tuple<Double, Double> centerPos, Color bodyColor, Color turretColor,
-                HashMap<Integer, Tuple<Double, Double>> keyMap){
+                HashMap<Integer, Double> codeToDirection){
         this.keyHandler = new KeyHandler();
-        this.keyMap = keyMap;
+        this.codeToDirection = codeToDirection;
+        this.direction = 0.0;
         this.accel = new Tuple<>(0.0, 0.0);
         this.vel = new Tuple<>(0.0, 0.0);
         this.centerPos = centerPos;
@@ -47,6 +50,12 @@ public class Tank implements GameObject{
         this.body.updatePosition(this.vel);
         this.turret.updateVelocity(this.accel);
         this.turret.updatePosition(this.vel);
+    }
+
+    private void rotateMover(Mover mover, Double angle) {
+        Double dx = mover.pos.first*(1-Math.cos(angle)) + mover.pos.second*Math.sin(angle);
+        Double dy = mover.pos.second*(1-Math.cos(angle)) - mover.pos.first*Math.sin(angle);
+        mover.updatePosition(new Tuple<>(dx, dy));
     }
 
     @Override
