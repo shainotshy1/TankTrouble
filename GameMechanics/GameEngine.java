@@ -21,7 +21,7 @@ public class GameEngine implements Runnable{
         gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
         setupFrame(gamePanel);
 
-        double test_aspect_ratio = 2.5;
+        double test_aspect_ratio = 2;
         int wallWidth = 5;
         generateWorld(test_aspect_ratio, wallWidth);
     }
@@ -40,7 +40,7 @@ public class GameEngine implements Runnable{
             topLeftY = (h % TILE_SIZE) / 2;
             topLeftX = (w - cols * TILE_SIZE) / 2;
         }
-        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth);
+        world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 123);
         gamePanel.addGameObject(world);
     }
 
