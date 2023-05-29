@@ -31,6 +31,10 @@ public class Ball implements GameObject, Collidable {
         resetColliderCenter();
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public void setVelocity(Vector2d vel) {
         this.vel = vel.clone();
     }

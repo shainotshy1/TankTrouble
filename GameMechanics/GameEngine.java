@@ -1,11 +1,13 @@
 package GameMechanics;
 
 import GameObjects.Ball;
+import GameObjects.GameObject;
 import Utils.Vector2d;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
+import java.util.List;
 
 public class GameEngine implements Runnable{
     private static final int WALL_WIDTH = 5;
@@ -19,6 +21,7 @@ public class GameEngine implements Runnable{
     private Ball testBall;
     private int rows, cols, topLeftX, topLeftY;
     private double last_time;
+    private double frameDelta;
 
     public GameEngine() {
         frame = new JFrame();
@@ -28,6 +31,7 @@ public class GameEngine implements Runnable{
         double test_aspect_ratio = 2.5;
         generateWorld(test_aspect_ratio, WALL_WIDTH);
         last_time = 0.0;
+        frameDelta = 0.0;
     }
 
     public void generateWorld(double aspectRatio, int wallWidth) {
@@ -46,8 +50,8 @@ public class GameEngine implements Runnable{
         }
         world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 1);
         Vector2d center = new Vector2d(topLeftX + TILE_SIZE / 2, topLeftY + TILE_SIZE / 2);
-        Vector2d velocity = new Vector2d(100, 100);
-        testBall = new Ball(center, velocity, TILE_SIZE / 5, Color.WHITE);
+        Vector2d velocity = new Vector2d(200, 200);
+        testBall = new Ball(center, velocity, TILE_SIZE / 4, Color.WHITE);
         gamePanel.addGameObject(world);
         gamePanel.addGameObject(testBall);
     }
@@ -75,15 +79,35 @@ public class GameEngine implements Runnable{
         }
     }
 
+    private void processCollisions() {
+        /*List<GameObject> objects = world.getCollidingObjects(testBall.getCollider());
+        if (objects.size() > 0) {
+            testBall.setColor(Color.RED);
+        } else {
+            testBall.setColor(Color.WHITE);
+        }*/
+    }
+
+    private void updatePositions() {
+        testBall.update(frameDelta);
+    }
+
+    private void updateFrameDelta() {
+        double present_time = System.nanoTime();
+        frameDelta = (present_time - last_time) / 1000000000; //seconds
+    }
+
+
     public void update() {
         if (last_time == 0.0) {
             last_time = System.nanoTime();
             return;
         }
-        double present_time = System.nanoTime();
-        double frameDelta = (present_time - last_time) / 1000000000; //seconds
-        testBall.update(frameDelta);
 
-        last_time = present_time;
+        updateFrameDelta();
+        updatePositions();
+        processCollisions();
+
+        last_time = System.nanoTime();
     }
 }
