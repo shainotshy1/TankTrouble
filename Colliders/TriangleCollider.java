@@ -47,7 +47,7 @@ public class TriangleCollider implements Collider {
         double x_l = Math.min(p1.x, Math.min(p2.x, p3.x));
         double x_r = Math.max(p1.x, Math.max(p2.x, p3.x));
         double y_b = Math.min(p1.y, Math.min(p2.y, p3.y));
-        double y_t = Math.min(p1.y, Math.min(p2.y, p3.y));
+        double y_t = Math.max(p1.y, Math.max(p2.y, p3.y));
         box.add(new Vector2d(x_l, y_t)); //top left
         box.add(new Vector2d(x_r, y_t)); //top right
         box.add(new Vector2d(x_l, y_b)); //bottom left
@@ -79,7 +79,7 @@ public class TriangleCollider implements Collider {
         Vector2d p2 = lineSeg.get(1);
         Vector2d diff1 = x.subNew(p1);
         Vector2d diff2 = p2.subNew(p1);
-        if (diff2.y / diff2.x - diff1.y / diff1.x >= Double.MIN_VALUE) { //not same slope so not on the line segment
+        if (Math.abs(diff2.y / diff2.x - diff1.y / diff1.x) >= Double.MIN_VALUE) { //not same slope so not on the line segment
             return false;
         }
         if (diff1.dot(diff2) < 0) { //pointing in other direction
