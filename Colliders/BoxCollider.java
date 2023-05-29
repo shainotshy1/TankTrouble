@@ -73,4 +73,9 @@ public class BoxCollider implements Collider {
         }
         return false;
     }
+
+    @Override
+    public Vector2d getCenter() {
+        return center.clone();
+    }
 }

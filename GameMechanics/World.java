@@ -1,7 +1,10 @@
 package GameMechanics;
 
+import Colliders.Collider;
+import GameObjects.Collidable;
 import GameObjects.GameObject;
 import GameObjects.Wall;
+import Utils.Vector2d;
 
 import java.awt.*;
 import java.util.*;
@@ -17,11 +20,29 @@ public class World implements GameObject {
         public GridBlock prev;
         private Wall bottomWall;
         private Wall rightWall;
+        private List<GameObject> objects;
         public GridBlock(int row, int col, double x, double y, double wallWidth, double tileSize, Color color) {
             this.row = row;
             this.col = col;
             bottomWall = new Wall(x - wallWidth, y + tileSize - wallWidth, tileSize + wallWidth, wallWidth, color);
             rightWall = new Wall(x + tileSize - wallWidth, y, wallWidth, tileSize, color);
+            objects = new ArrayList<>(List.of(bottomWall, rightWall));
+        }
+
+        public List<GameObject> getObjects() {
+            List<GameObject> res = new ArrayList<>();
+            for (GameObject obj : objects) {
+                res.add(obj);
+            }
+            return res;
+        }
+
+        public boolean addObject(GameObject obj) {
+            return objects.add(obj);
+        }
+
+        public boolean removeObject(GameObject obj) {
+            return objects.remove(obj);
         }
 
         @Override
@@ -56,6 +77,53 @@ public class World implements GameObject {
         blocks = new GridBlock[rows][cols];
         borders = new ArrayList<>();
         generateMap();
+    }
+
+    public boolean addObject(GameObject obj, int row, int col) {
+        if (inBounds(row, col)) {
+            return blocks[row][col].addObject(obj);
+        }
+        return false;
+    }
+
+    public boolean removeObject(GameObject obj, int row, int col) {
+        if(inBounds(row, col)) {
+            return blocks[row][col].removeObject(obj);
+        }
+        return false;
+    }
+
+    //returns the objects that the collider is colliding with
+    public List<GameObject> getCollidingObjects(Collider collider) {
+        List<GameObject> res = new ArrayList<>();
+        Vector2d center = collider.getCenter();
+        int row = (int) Math.floor((center.x - x) / tileSize);
+        int col = (int) Math.floor((center.y - y) / tileSize);
+        List<GameObject> neighbors = getBlockObjects(row, col);
+        for (GameObject neighbor : neighbors) {
+            if (neighbor instanceof Collidable) {
+                Collidable c = (Collidable) neighbor;
+                if (c.colliding(collider)) {
+                    res.add(neighbor);
+                }
+            }
+        }
+        return res;
+    }
+
+    //gets objects within a block and from the block above and to the left since blocks have only right and bottom walls
+    private List<GameObject> getBlockObjects(int row, int col) {
+        List<GameObject> res = new ArrayList<>();
+        if (inBounds(row, col)) { //grid block
+            res.addAll(blocks[row][col].getObjects());
+        }
+        if (inBounds(row - 1, col)) { //top grid block
+            res.addAll(blocks[row - 1][col].getObjects());
+        }
+        if (inBounds(row, col - 1)) { //left grid block
+            res.addAll(blocks[row][col - 1].getObjects());
+        }
+        return res;
     }
 
     private void generateBorders(Color color) {

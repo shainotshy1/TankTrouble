@@ -18,4 +18,9 @@ public class CircleCollider implements Collider {
         }
         return collider.colliding(this);
     }
+
+    @Override
+    public Vector2d getCenter() {
+        return center.clone();
+    }
 }

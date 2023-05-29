@@ -118,4 +118,9 @@ public class TriangleCollider implements Collider {
         }
         return false; //return if unhandled collider
     }
+
+    @Override
+    public Vector2d getCenter() {
+        return v1.addNew(v2).addNew(v3).mulNew(1 / 3);
+    }
 }
