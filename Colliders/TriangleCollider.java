@@ -37,11 +37,34 @@ public class TriangleCollider implements Collider {
         return proj.normSquared();
     }
 
+    //Cramer's rule implementation
+    private Vector3d findBarycentric(Vector2d p) {
+        Vector2d p0 = v2.subNew(v1);
+        Vector2d p1 = v3.subNew(v1);
+        Vector2d p2 = p.subNew(v1);
+        double d00 = p0.dot(p0);
+        double d01 = p0.dot(p1);
+        double d11 = p1.dot(p1);
+        double d20 = p2.dot(p0);
+        double d21 = p2.dot(p1);
+        double denominator = d00 * d11 - d01 * d01;
+        double alpha = (d11 * d20 - d01 * d21) / denominator;
+        double beta = (d00 * d21 - d01 * d20) / denominator;
+        double gamma = 1 - alpha - beta;
+        Vector3d res = new Vector3d(alpha, beta, gamma);
+        return res;
+    }
+
     public boolean pointInside(Vector2d p) {
         Vector3d bary = findBarycentric(p);
         double alpha = bary.x;
         double beta = bary.y;
         double gamma = bary.z;
+        System.out.println(v1+", "+v2+", "+v3);
+        System.out.println("Normal: "+p);
+        Vector2d b = v1.mulNew(alpha).addNew(v2.mulNew(beta)).addNew(v3.mulNew(gamma));
+        System.out.println(alpha + ", "+beta+", "+gamma);
+        System.out.println("Barycentric: "+b);
         return alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1;
     }
 
@@ -92,21 +115,6 @@ public class TriangleCollider implements Collider {
         return diff1.normSquared() > diff2.normSquared(); //off the line
     }
 
-    private Vector3d findBarycentric(Vector2d p) {
-        Vector2d bc = v3.subNew(v2);
-        Vector2d ac = v3.subNew(v1);
-        Vector2d ap = p.subNew(v1);
-        Vector2d bp = p.subNew(v2);
-        double apc = Math.abs(ac.cross(ap));
-        double bpc = Math.abs(bc.cross(bp));
-        double abc = Math.abs(bc.cross(ac));
-        double alpha = bpc / abc;
-        double beta = apc / abc;
-        double gamma = 1 - alpha - beta;
-        Vector3d res = new Vector3d(alpha, beta, gamma);
-        return res;
-    }
-
     @Override
     public boolean colliding(Collider collider) {
         if (collider instanceof CircleCollider) {
@@ -150,29 +158,29 @@ public class TriangleCollider implements Collider {
             //check intersecting line segments
             List<Vector2d> lines1 = new ArrayList<>();
             List<Vector2d> lines2 = new ArrayList<>();
-            List<List<Vector2d>> lineSegs1 = new ArrayList<>();
-            List<List<Vector2d>> lineSegs2 = new ArrayList<>();
+            List<List<Vector2d>> lineSegments1 = new ArrayList<>();
+            List<List<Vector2d>> lineSegments2 = new ArrayList<>();
 
             lines1.add(getLine(v1, v2));
-            lineSegs1.add(new ArrayList<>(List.of(v1, v2)));
+            lineSegments1.add(new ArrayList<>(List.of(v1, v2)));
             lines1.add(getLine(v1, v3));
-            lineSegs1.add(new ArrayList<>(List.of(v1, v3)));
+            lineSegments1.add(new ArrayList<>(List.of(v1, v3)));
             lines1.add(getLine(v2, v3));
-            lineSegs1.add(new ArrayList<>(List.of(v2, v3)));
+            lineSegments1.add(new ArrayList<>(List.of(v2, v3)));
 
             lines2.add(getLine(t.v1, t.v2));
-            lineSegs2.add(new ArrayList<>(List.of(t.v1, t.v2)));
+            lineSegments2.add(new ArrayList<>(List.of(t.v1, t.v2)));
             lines2.add(getLine(t.v1, t.v3));
-            lineSegs2.add(new ArrayList<>(List.of(t.v1, t.v3)));
+            lineSegments2.add(new ArrayList<>(List.of(t.v1, t.v3)));
             lines2.add(getLine(t.v2, t.v3));
-            lineSegs2.add(new ArrayList<>(List.of(t.v2, t.v3)));
+            lineSegments2.add(new ArrayList<>(List.of(t.v2, t.v3)));
 
             for (int i = 0; i < lines1.size(); i++) {
                 Vector2d line1 = lines1.get(i);
-                List<Vector2d> lineSeg1 = lineSegs1.get(i);
+                List<Vector2d> lineSeg1 = lineSegments1.get(i);
                 for (int j = 0; j < lines2.size(); j++) {
                     Vector2d line2 = lines2.get(j);
-                    List<Vector2d> lineSeg2 = lineSegs2.get(j);
+                    List<Vector2d> lineSeg2 = lineSegments2.get(j);
                     Vector2d intersect;
                     try {
                         intersect = intersection(line1, line2);
