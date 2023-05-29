@@ -52,6 +52,7 @@ public class GameEngine implements Runnable{
         keyCodes1.put("DOWN", Constants.DOWN_ARROW);
         keyCodes1.put("LEFT", Constants.LEFT_ARROW);
         keyCodes1.put("RIGHT", Constants.RIGHT_ARROW);
+        keyCodes1.put("SHOOT", Constants.SLASH);
         Player player1 = new Player(new Tuple<>(WINDOW_WIDTH*2.0/3.0, WINDOW_HEIGHT/2.0), "Bob",
                                     Color.BLUE, Color.RED, gamePanel, keyCodes1);
         gamePanel.addGameObject(player1);
@@ -61,6 +62,7 @@ public class GameEngine implements Runnable{
         keyCodes2.put("LEFT", Constants.A);
         keyCodes2.put("DOWN", Constants.S);
         keyCodes2.put("RIGHT", Constants.D);
+        keyCodes1.put("SHOOT", Constants.Q);
         Player player2 = new Player(new Tuple<>(WINDOW_WIDTH/3.0, WINDOW_HEIGHT/2.0), "Joe",
                 Color.MAGENTA, Color.GREEN, gamePanel, keyCodes2);
         gamePanel.addGameObject(player2);

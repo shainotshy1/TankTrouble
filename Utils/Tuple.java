@@ -8,4 +8,8 @@ public class Tuple<V1, V2> {
         this.first = first;
         this.second = second;
     }
+
+    public Tuple<V1, V2> copy(){
+        return new Tuple<>(this.first, this.second);
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Turret extends Mover implements GameObject{
     ArrayList<Bullet> bullets;
+
     public Turret(Tuple<Double, Double> pos, Tuple<Double, Double> vel, Tuple<Double, Double> accel,
                   Tuple<Integer, Integer> dim, Color color) {
         super();
@@ -19,12 +20,18 @@ public class Turret extends Mover implements GameObject{
         this.accel = accel;
         this.bullets = new ArrayList<>();
     }
+    public void shoot(BulletTypes type){
+        this.addBullet(type);
+    }
 
-    public void addBullet(BulletTypes type){
+    private void addBullet(BulletTypes type){
         switch (type) {
-            case BASIC -> this.bullets.add(new BasicBullet(new Tuple<>(0.0, (double)this.height), this.vel, Shapes.CIRCLE));
-            case SEEKER -> this.bullets.add(new SeekerBullet(new Tuple<>(0.0, (double)this.height), this.vel,Shapes.RECTANGLE));
-            case MISSILE -> this.bullets.add(new MissileBullet(new Tuple<>(0.0, (double)this.height), this.vel, Shapes.TRIANGLE));
+            case BASIC -> this.bullets.add(new BasicBullet(new Tuple<>(0.0, (double)this.height), this.vel,
+                                           new Tuple<>(this.width, this.width)));
+            case SEEKER -> this.bullets.add(new SeekerBullet(new Tuple<>(0.0, (double)this.height), this.vel,
+                                            new Tuple<>(this.width, this.width)));
+            case MISSILE -> this.bullets.add(new MissileBullet(new Tuple<>(0.0, (double)this.height), this.vel,
+                                             new Tuple<>(this.width, this.width)));
         }
     }
 
@@ -38,6 +45,7 @@ public class Turret extends Mover implements GameObject{
         this.updatePosition(this.vel);
         for (Bullet bullet : this.bullets) {
             bullet.display(g2);
+            bullet.updatePosition(bullet.vel);
         }
         g2.setTransform(old);
     }

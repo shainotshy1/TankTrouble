@@ -9,4 +9,6 @@ public class Constants {
     public static final int A = 65;
     public static final int S = 83;
     public static final int D = 68;
+    public static final int Q = 81;
+    public static final int SLASH = 47;
 }

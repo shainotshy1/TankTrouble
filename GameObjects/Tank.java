@@ -17,6 +17,7 @@ public class Tank implements GameObject{
     private Tuple<Double, Double> turretPos; // (x, y)
     private Tuple<Double, Double> vel; // (vx, vy)
     private Tuple<Double, Double> accel; // (ax, ay)
+    private Tuple<Double, Double> bulletVel;
     private Double direction; // angle in radians
     private Color bodyColor;
     private Color turretColor;
@@ -70,6 +71,9 @@ public class Tank implements GameObject{
         }
         if (gamePanel.getKeyStatus(keyCodes.get("RIGHT"))) {
             this.direction += Math.PI/200;
+        }
+        if (gamePanel.getKeyStatus(keyCodes.get("SHOOT"))) {
+            this.turret.shoot(BulletTypes.BASIC);
         }
     }
 
