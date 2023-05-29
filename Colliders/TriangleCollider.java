@@ -7,11 +7,13 @@ import java.util.ArrayList;
 
 public class TriangleCollider implements Collider {
     public Vector2d v1, v2, v3;
+
     public TriangleCollider(Vector2d v1, Vector2d v2, Vector2d v3) {
         this.v1 = v1.clone();
         this.v2 = v2.clone();
         this.v3 = v3.clone();
     }
+
     private boolean isObtuse(Vector2d p1, Vector2d p2, Vector2d p3) {
         double side1 = p1.subNew(p2).normSquared();
         double side2 = p1.subNew(p3).normSquared();
@@ -20,6 +22,7 @@ public class TriangleCollider implements Collider {
         double a2_plus_b2 = side1 + side2 + side3 - c2;
         return a2_plus_b2 < c2;
     }
+
     private double distSquareToSegment(Vector2d p1, Vector2d p2, Vector2d x) {
         double lineMag2 = p1.subNew(p2).normSquared();
         if (lineMag2 == 0) { //if line segment is a point
@@ -33,6 +36,7 @@ public class TriangleCollider implements Collider {
         Vector2d proj = a.mulNew(b.dot(a) / a.normSquared());
         return proj.normSquared();
     }
+
     public boolean pointInside(Vector2d p) {
         Vector3d bary = findBarycentric(p);
         double alpha = bary.x;
@@ -102,6 +106,7 @@ public class TriangleCollider implements Collider {
         Vector3d res = new Vector3d(alpha, beta, gamma);
         return res;
     }
+
     @Override
     public boolean colliding(Collider collider) {
         if (collider instanceof CircleCollider) {

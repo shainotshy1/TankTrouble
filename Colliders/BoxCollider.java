@@ -7,8 +7,8 @@ public class BoxCollider implements Collider {
     private double w, h, angle;
     public TriangleCollider triangle1;
     public TriangleCollider triangle2;
-    public BoxCollider(double x_center, double y_center, double w, double h, double angle) {
-        center = new Vector2d(x_center, y_center);
+    public BoxCollider(Vector2d center, double w, double h, double angle) {
+        this.center = center.clone();
         this.w = w;
         this.h = h;
         this.angle = angle;
@@ -24,6 +24,9 @@ public class BoxCollider implements Collider {
         triangle1.v1.add(delta);
         triangle1.v2.add(delta);
         triangle1.v3.add(delta);
+        triangle2.v1.add(delta);
+        triangle2.v2.add(delta);
+        triangle2.v3.add(delta);
     }
 
     public void updateCenter(Vector2d center) {
@@ -38,19 +41,23 @@ public class BoxCollider implements Collider {
     }
 
     private void calculateVertices() {
-        Vector2d v1, v2, v3, v4;
+        Vector2d a1, b1, c1, a2, b2, c2;
         double half_w = w / 2;
         double half_h = h / 2;
-        v1 = new Vector2d(-half_w, half_h);
-        v2 = new Vector2d(half_w, half_h);
-        v3 = new Vector2d(-half_w, -half_h);
-        v4 = new Vector2d(half_w, -half_h);
-        v1.rotate(angle);
-        v2.rotate(angle);
-        v3.rotate(angle);
-        v4.rotate(angle);
-        triangle1 = new TriangleCollider(v1, v2, v3);
-        triangle2 = new TriangleCollider(v1, v2, v4);
+        a1 = new Vector2d(-half_w, half_h);
+        b1 = new Vector2d(half_w, half_h);
+        c1 = new Vector2d(-half_w, -half_h);
+        a2 = a1.clone();
+        b2 = b1.clone();
+        c2 = new Vector2d(half_w, -half_h);
+        a1.rotate(angle);
+        b1.rotate(angle);
+        c1.rotate(angle);
+        a2.rotate(angle);
+        b2.rotate(angle);
+        c2.rotate(angle);
+        triangle1 = new TriangleCollider(a1, b1, c1);
+        triangle2 = new TriangleCollider(a2, b2, c2);
         shift(center);
     }
 

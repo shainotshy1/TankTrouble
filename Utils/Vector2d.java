@@ -8,6 +8,12 @@ public class Vector2d {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        return "("+this.x+", "+this.y+")";
+    }
+
+
     public double dot(Vector2d other) {
         return x * other.x + y * other.y;
     }
