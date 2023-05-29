@@ -6,7 +6,7 @@ public class CircleCollider implements Collider {
     public Vector2d center;
     public double r;
     public CircleCollider(Vector2d center, double r) {
-        this.center = center;
+        this.center = center.clone();
         this.r = r;
     }
     @Override

@@ -1,5 +1,8 @@
 package GameMechanics;
 
+import GameObjects.Ball;
+import Utils.Vector2d;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.Color;
@@ -9,11 +12,14 @@ public class GameEngine implements Runnable{
     private static final int TILE_SIZE = 48;
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
-    JFrame frame;
-    GamePanel gamePanel;
-    Thread gameThread;
-    World world;
-    int rows, cols, topLeftX, topLeftY;
+    private JFrame frame;
+    private GamePanel gamePanel;
+    private Thread gameThread;
+    private World world;
+    private Ball testBall;
+    private int rows, cols, topLeftX, topLeftY;
+    private double last_time;
+
     public GameEngine() {
         frame = new JFrame();
         gamePanel = new GamePanel(WINDOW_WIDTH, WINDOW_HEIGHT, Color.BLACK);
@@ -21,6 +27,7 @@ public class GameEngine implements Runnable{
 
         double test_aspect_ratio = 2.5;
         generateWorld(test_aspect_ratio, WALL_WIDTH);
+        last_time = 0.0;
     }
 
     public void generateWorld(double aspectRatio, int wallWidth) {
@@ -38,7 +45,11 @@ public class GameEngine implements Runnable{
             topLeftX = (w - cols * TILE_SIZE) / 2;
         }
         world = new World(gamePanel, topLeftX, topLeftY, rows, cols, TILE_SIZE, wallWidth, 1);
+        Vector2d center = new Vector2d(topLeftX + TILE_SIZE / 2, topLeftY + TILE_SIZE / 2);
+        Vector2d velocity = new Vector2d(100, 100);
+        testBall = new Ball(center, velocity, TILE_SIZE / 5, Color.WHITE);
         gamePanel.addGameObject(world);
+        gamePanel.addGameObject(testBall);
     }
 
     private void setupFrame(JPanel panel) {
@@ -65,6 +76,14 @@ public class GameEngine implements Runnable{
     }
 
     public void update() {
+        if (last_time == 0.0) {
+            last_time = System.nanoTime();
+            return;
+        }
+        double present_time = System.nanoTime();
+        double frameDelta = (present_time - last_time) / 1000000000; //seconds
+        testBall.update(frameDelta);
 
+        last_time = present_time;
     }
 }

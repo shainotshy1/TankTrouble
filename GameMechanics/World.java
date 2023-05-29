@@ -133,13 +133,13 @@ public class World implements GameObject {
         Wall wall1 = new Wall(x_c, y_c, worldWidth + shift * 2, wallWidth, color); //top
         Wall wall2 = new Wall(x_c, y_c + worldHeight, worldWidth + shift, wallWidth, color); //bottom
         Wall wall3 = new Wall(x_c, y_c, wallWidth, worldHeight + shift * 2, color); //left
-        Wall wall4 = new Wall(x_c + worldWidth, y_c, wallWidth, worldHeight, color); //right
+        Wall wall4 = new Wall(x_c + worldWidth, y_c, wallWidth, worldHeight + shift * 2, color); //right
         borders.add(wall1);
         borders.add(wall2);
         borders.add(wall3);
         borders.add(wall4);
     }
-    private void generateObstacles(Color color) {
+    private void generateWalls(Color color) {
         if (rows == 0 || cols == 0) {
             return; //failsafe is grid is size 0
         }
@@ -222,7 +222,7 @@ public class World implements GameObject {
         borders.clear();
         Color color = Color.WHITE;
         generateBorders(color);
-        generateObstacles(color);
+        generateWalls(color);
     }
 
     @Override
