@@ -47,8 +47,8 @@ public class BoxCollider implements Collider {
         a1 = new Vector2d(-half_w, half_h);
         b1 = new Vector2d(half_w, half_h);
         c1 = new Vector2d(-half_w, -half_h);
-        a2 = a1.clone();
-        b2 = b1.clone();
+        a2 = b1.clone();
+        b2 = c1.clone();
         c2 = new Vector2d(half_w, -half_h);
         a1.rotate(angle);
         b1.rotate(angle);

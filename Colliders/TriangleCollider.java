@@ -1,5 +1,6 @@
 package Colliders;
 
+import Utils.Constants;
 import Utils.Vector2d;
 import Utils.Vector3d;
 import java.util.List;
@@ -60,11 +61,6 @@ public class TriangleCollider implements Collider {
         double alpha = bary.x;
         double beta = bary.y;
         double gamma = bary.z;
-        System.out.println(v1+", "+v2+", "+v3);
-        System.out.println("Normal: "+p);
-        Vector2d b = v1.mulNew(alpha).addNew(v2.mulNew(beta)).addNew(v3.mulNew(gamma));
-        System.out.println(alpha + ", "+beta+", "+gamma);
-        System.out.println("Barycentric: "+b);
         return alpha >= 0 && alpha <= 1 && beta >= 0 && beta <= 1 && gamma >= 0 && gamma <= 1;
     }
 
@@ -82,15 +78,28 @@ public class TriangleCollider implements Collider {
         return box;
     }
 
+    public static boolean lineSegmentsIntersect(List<Vector2d> seg1, List<Vector2d> seg2) {
+        Vector2d line1 = getLine(seg1.get(0), seg1.get(1));
+        Vector2d line2 = getLine(seg2.get(0), seg2.get(1));
+        Vector2d intersect;
+        try {
+            intersect = intersection(line1, line2);
+        } catch (ArithmeticException e) {
+            //handle if line are parallel
+            return false;
+        }
+        return pointOnLineSegment(seg1, intersect) && pointOnLineSegment(seg2, intersect);
+    }
+
     //returns equation y = ax + b in form of vector (a, b)
-    private Vector2d getLine(Vector2d p1, Vector2d p2) {
+    public static Vector2d getLine(Vector2d p1, Vector2d p2) {
         double a = (p1.y - p2.y) / (p1.x - p2.x);
         double b = p1.y - a * p1.x;
         return new Vector2d(a, b);
     }
 
     //takes in 2 lines in form (a1, b1), (a2, b2) where y = a1 x + b1, y = a2 x + b2
-    private Vector2d intersection(Vector2d line1, Vector2d line2) throws ArithmeticException {
+    public static Vector2d intersection(Vector2d line1, Vector2d line2) throws ArithmeticException {
         double a1 = line1.x;
         double b1 = line1.y;
         double a2 = line2.x;
@@ -101,18 +110,20 @@ public class TriangleCollider implements Collider {
     }
 
     //lineSeg is length two list with the elements being the two vertices of the line
-    private boolean pointOnLineSegment(List<Vector2d> lineSeg, Vector2d x) {
+    public static boolean pointOnLineSegment(List<Vector2d> lineSeg, Vector2d x) {
         Vector2d p1 = lineSeg.get(0);
         Vector2d p2 = lineSeg.get(1);
         Vector2d diff1 = x.subNew(p1);
         Vector2d diff2 = p2.subNew(p1);
-        if (Math.abs(diff2.y / diff2.x - diff1.y / diff1.x) >= Double.MIN_VALUE) { //not same slope so not on the line segment
+        double slope1 = diff2.y / diff2.x;
+        double slope2 = diff1.y / diff1.x;
+        if (Math.abs(slope2 - slope1) > Constants.EPSILON) { //not same slope so not on the line segment
             return false;
         }
         if (diff1.dot(diff2) < 0) { //pointing in other direction
             return false;
         }
-        return diff1.normSquared() > diff2.normSquared(); //off the line
+        return diff1.normSquared() < diff2.normSquared(); //off the line
     }
 
     @Override
@@ -156,39 +167,20 @@ public class TriangleCollider implements Collider {
             }
 
             //check intersecting line segments
-            List<Vector2d> lines1 = new ArrayList<>();
-            List<Vector2d> lines2 = new ArrayList<>();
             List<List<Vector2d>> lineSegments1 = new ArrayList<>();
             List<List<Vector2d>> lineSegments2 = new ArrayList<>();
 
-            lines1.add(getLine(v1, v2));
             lineSegments1.add(new ArrayList<>(List.of(v1, v2)));
-            lines1.add(getLine(v1, v3));
             lineSegments1.add(new ArrayList<>(List.of(v1, v3)));
-            lines1.add(getLine(v2, v3));
             lineSegments1.add(new ArrayList<>(List.of(v2, v3)));
 
-            lines2.add(getLine(t.v1, t.v2));
             lineSegments2.add(new ArrayList<>(List.of(t.v1, t.v2)));
-            lines2.add(getLine(t.v1, t.v3));
             lineSegments2.add(new ArrayList<>(List.of(t.v1, t.v3)));
-            lines2.add(getLine(t.v2, t.v3));
             lineSegments2.add(new ArrayList<>(List.of(t.v2, t.v3)));
 
-            for (int i = 0; i < lines1.size(); i++) {
-                Vector2d line1 = lines1.get(i);
-                List<Vector2d> lineSeg1 = lineSegments1.get(i);
-                for (int j = 0; j < lines2.size(); j++) {
-                    Vector2d line2 = lines2.get(j);
-                    List<Vector2d> lineSeg2 = lineSegments2.get(j);
-                    Vector2d intersect;
-                    try {
-                        intersect = intersection(line1, line2);
-                    } catch (ArithmeticException e) {
-                        //handle if line are parallel
-                        continue;
-                    }
-                    if (pointOnLineSegment(lineSeg1, intersect) && pointOnLineSegment(lineSeg2, intersect)) {
+            for (List<Vector2d> seg1 : lineSegments1) {
+                for (List<Vector2d> seg2 : lineSegments2) {
+                    if (lineSegmentsIntersect(seg1, seg2)) {
                         return true;
                     }
                 }

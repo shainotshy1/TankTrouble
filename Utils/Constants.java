@@ -5,4 +5,6 @@ public class Constants {
     public static final int UP_ARROW = 38;
     public static final int RIGHT_ARROW = 39;
     public static final int DOWN_ARROW = 40;
+    public static final double EPSILON = 1e-12;
+
 }
