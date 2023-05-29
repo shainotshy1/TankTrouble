@@ -4,8 +4,10 @@ import Utils.Tuple;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 public class Turret extends Mover implements GameObject{
+    ArrayList<Bullet> bullets;
     public Turret(Tuple<Double, Double> pos, Tuple<Double, Double> vel, Tuple<Double, Double> accel,
                   Tuple<Integer, Integer> dim, Color color) {
         super();
@@ -15,16 +17,28 @@ public class Turret extends Mover implements GameObject{
         this.pos = pos;
         this.vel = vel;
         this.accel = accel;
+        this.bullets = new ArrayList<>();
     }
+
+    public void addBullet(BulletTypes type){
+        switch (type) {
+            case BASIC -> this.bullets.add(new BasicBullet(new Tuple<>(0.0, (double)this.height), this.vel, Shapes.CIRCLE));
+            case SEEKER -> this.bullets.add(new SeekerBullet(new Tuple<>(0.0, (double)this.height), this.vel,Shapes.RECTANGLE));
+            case MISSILE -> this.bullets.add(new MissileBullet(new Tuple<>(0.0, (double)this.height), this.vel, Shapes.TRIANGLE));
+        }
+    }
+
     @Override
     public void display(Graphics2D g2) {
         AffineTransform old = g2.getTransform();
         g2.rotate(-Math.PI / 2);
         g2.setColor(this.color);
-//        g2.fillRect((int) Math.round(this.pos.first), (int) Math.round(this.pos.second), this.width, this.height);
         this.updateVelocity(this.accel);
         g2.fillRect(-this.width/2, 0, this.width, this.height);
         this.updatePosition(this.vel);
+        for (Bullet bullet : this.bullets) {
+            bullet.display(g2);
+        }
         g2.setTransform(old);
     }
 }

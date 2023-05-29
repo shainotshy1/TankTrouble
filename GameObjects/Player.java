@@ -1,7 +1,6 @@
 package GameObjects;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 
 import GameMechanics.GamePanel;

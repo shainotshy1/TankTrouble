@@ -5,7 +5,6 @@ import java.awt.geom.AffineTransform;
 import java.util.HashMap;
 
 import GameMechanics.GamePanel;
-import GameMechanics.KeyHandler;
 import Utils.Tuple;
 
 public class Tank implements GameObject{
@@ -58,14 +57,13 @@ public class Tank implements GameObject{
         g2.translate(vel.first, vel.second);
     }
 
-
     public void update(Graphics2D g2, GamePanel gamePanel, HashMap<String, Integer> keyCodes) {
         this.updateMotion(g2);
         if (gamePanel.getKeyStatus(keyCodes.get("UP"))) {
-            this.updateVelocity(new Tuple<>(Math.cos(this.direction), Math.sin(this.direction)));
+            this.updateVelocity(new Tuple<>(Math.cos(this.direction)/6, Math.sin(this.direction)/6));
         }
         if (gamePanel.getKeyStatus(keyCodes.get("DOWN"))) {
-            this.updateVelocity(new Tuple<>(-Math.cos(this.direction), -Math.sin(this.direction)));
+            this.updateVelocity(new Tuple<>(-Math.cos(this.direction)/6, -Math.sin(this.direction)/6));
         }
         if (gamePanel.getKeyStatus(keyCodes.get("LEFT"))) {
             this.direction -= Math.PI/200;

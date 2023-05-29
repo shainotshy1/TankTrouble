@@ -58,8 +58,8 @@ public class GameEngine implements Runnable{
 
         HashMap<String, Integer> keyCodes2 = new HashMap<>();
         keyCodes2.put("UP", Constants.W);
-        keyCodes2.put("DOWN", Constants.A);
-        keyCodes2.put("LEFT", Constants.S);
+        keyCodes2.put("LEFT", Constants.A);
+        keyCodes2.put("DOWN", Constants.S);
         keyCodes2.put("RIGHT", Constants.D);
         Player player2 = new Player(new Tuple<>(WINDOW_WIDTH/3.0, WINDOW_HEIGHT/2.0), "Joe",
                 Color.MAGENTA, Color.GREEN, gamePanel, keyCodes2);
